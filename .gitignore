@@ -23,3 +23,11 @@
 /dist/
 /nbdist/
 /.nb-gradle/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar

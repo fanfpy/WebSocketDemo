@@ -45,14 +45,15 @@ public class WebSocketServer {
 
     private static ArrayList<Message> messageArrayList = new ArrayList<>();
 
-    @OnMessage(maxMessageSize = 10)
+    @OnMessage
     public void onMessage(String jsonString) throws IOException {
         System.out.println("来自客户端的消息"+jsonString);
         JSONObject json=JSONObject.parseObject(jsonString);
         sendUser = json.getString("sendUser");
         toUser = json.getString("toUser");
         message = json.getString("message");
-        message = "{'sendUser':"+sendUser+",'toUser':"+toUser+",'message':"+message+"}";
+//        message = "{\"sendUser\":"+sendUser+",\"toUser\":"+toUser+",\"message\":"+message+"}";
+
 
         messageArrayList.add(new Message(sendUser,toUser,message,new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date())));
 
@@ -66,11 +67,11 @@ public class WebSocketServer {
         user.sendMessage("send",message);
     }
     @OnOpen
-    public void onOpen(Session session, EndpointConfig endpointConfig, @PathParam("parm") String parm) throws IOException {
+    public void onOpen(Session session, EndpointConfig endpointConfig, @PathParam("sendUser") String sendUser) throws IOException {
         this.session = session;
         //初始化用户
-        this.sendUser = parm;
-        LOGGER.info("新的连接,用户id={}",parm);
+        this.sendUser = sendUser;
+        LOGGER.info("新的连接,用户id={}",sendUser);
         addOnlineCount();
         System.out.println("有新连接加入！当前在线人数为" + getOnlineCount() + " 当前session是" + session.hashCode());
         connections.put(sendUser,this);
