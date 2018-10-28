@@ -5,14 +5,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
-import javax.websocket.CloseReason;
-import javax.websocket.EndpointConfig;
-import javax.websocket.OnClose;
-import javax.websocket.OnError;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
-import javax.websocket.Session;
+import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
@@ -53,9 +48,9 @@ public class WebSocketServer {
         toUser = json.getString("toUser");
         message = json.getString("message");
 //        message = "{\"sendUser\":"+sendUser+",\"toUser\":"+toUser+",\"message\":"+message+"}";
-
-
-        messageArrayList.add(new Message(sendUser,toUser,message,new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date())));
+//        Message messageObj = new Message(sendUser,toUser,message,new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
+//
+//        messageArrayList.add(new Message(sendUser,toUser,message,new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date())));
 
         LOGGER.info("消息内容",message);
         WebSocketServer user = connections.get(toUser);
@@ -102,12 +97,13 @@ public class WebSocketServer {
         throwable.printStackTrace();
     }
 
-    public void sendMessage(String type,String message) throws IOException {
+    public void sendMessage(String type,Object message) throws IOException {
         if("count".equals(type)){
 
             this.session.getBasicRemote().sendText("当前在线人数:" + message);
         }else {
-            this.session.getBasicRemote().sendText(message);
+            System.out.println(message);
+            this.session.getAsyncRemote().sendObject(message);
         }
     }
 

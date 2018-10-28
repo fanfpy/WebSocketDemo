@@ -72,19 +72,10 @@ function new_websocket() {
 
         // 接收聊天消息
         ws.onmessage = function(e){
-            // console.log(e)
-            // console.log(typeof (e.data))
-            // var onMess = (e.data).replace("\"","").replace("\"","");
-            // // var onMess = eval('('+e.data+')');
-            // var onMess = JSON.parse(onMess);
-            // console.log(onMess)
-            // var nick_name = onMess.sendUser;
-            // var msg = onMess.message;
-            console.log("收到消息"+e.data);
+            console.log("收到消息"+JSON.parse(e));
             var html = '<p class="mdui-m-b-3"><span class="chat-box-green">' + e.data + '</span></p>';
             $('.mdui-dialog-content .chat-body').append(html);
             $('.mdui-dialog-content .chat-body').scrollTop($('.mdui-dialog-content .chat-body').height());
         };
     }
 }
-
